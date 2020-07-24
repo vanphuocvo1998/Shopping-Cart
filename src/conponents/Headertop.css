@@ -1,0 +1,9 @@
+.cart {
+    outline: none;
+    border: none;
+    background: #FF5722;
+    width: 48px;
+    height: 43px;
+    font-size: 24px;
+    color: #fff;
+}
