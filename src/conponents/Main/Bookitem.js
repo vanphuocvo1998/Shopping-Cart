@@ -126,14 +126,18 @@ class Bookitem extends Component{
 
     findIndex = (_id)=>{
      
-      var{Cart}= this.state;
-      var vitri = -1
-      Cart.forEach((item, index) => {
-          if(item.id === _id)
-          {
-              vitri= index;
-          }
-      });
+     // var{Cart}= this.state;
+     var Cart = JSON.parse(localStorage.getItem('Cart'));
+     var vitri = -1;
+      if(Cart.length >0)
+      {
+        Cart.forEach((item, index) => {
+              if(item.id === _id)
+              {
+                  vitri= index;
+              }
+           });
+      }
       return vitri;
   }
     render(){

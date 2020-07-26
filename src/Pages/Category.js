@@ -42,7 +42,7 @@ class Category extends Component{
         var {match} = this.props;
         if(prevProps.match.params.id !== match.params.id)
         {
-            console.log("componentDidUpdate");
+          //  console.log("componentDidUpdate");
             var id =match.params.id;
         
              axios.get(`https://localhost:44348/api/Books/GetByType/${id}`)

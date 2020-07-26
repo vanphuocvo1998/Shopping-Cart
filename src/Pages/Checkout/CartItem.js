@@ -1,9 +1,15 @@
 import React, {Component} from 'react';
 import "./CartItem.css";
+
+
 class CartItem extends Component
 {
-    ClickchangeSize = value =>{
-       // this.props.changeSize(value);
+    ChangeQuantity = (value, index) =>{
+      this.props.OnChangeQuantity(value, index);
+    }
+
+    Delete = index =>{
+        this.props.OnDelete(index);
     }
     render(){
         var {cart, index} = this.props;
@@ -19,18 +25,18 @@ class CartItem extends Component
                 <td className="invert">{cart.price}</td>
                 <td className="invert">
                 <div className="quantity">
-                    <div className="quantity-select" onClick={()=>this.ClickchangeSize(-1)}>
-                    <div className="entry value-minus">&nbsp;</div>
+                    <div className="quantity-select">
+                    <div className="entry value-minus" onClick={()=>this.ChangeQuantity(-1, index)}>&nbsp;</div>
                     <div className="entry value">
                         <span>{cart.quantity}</span>
                     </div>
-                    <div className="entry value-plus active" onClick={()=>this.ClickchangeSize(+1)}>&nbsp;</div>
+                    <div className="entry value-plus active" onClick={()=>this.ChangeQuantity(+1, index)}>&nbsp;</div>
                     </div>
                 </div>
                 </td>
                 <td className="invert">
                 <div className="rem">
-                    <div className="close1"> </div>
+                    <div className="close1" onClick={()=>this.Delete(index)}> </div>
                 </div>
                 </td>
           </tr>

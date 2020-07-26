@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import CartItem from "./CartItem";
 import Cart from "./Cart";
-
+import swal from 'sweetalert';
 class Checkout extends Component{
 
   constructor(props)
@@ -15,22 +15,65 @@ class Checkout extends Component{
 
     componentDidMount()
     {
-      const OldCart = localStorage.getItem('Cart') ? localStorage.getItem('Cart') : "[]";
+      const OldCart = localStorage.getItem('Cart') ? localStorage.getItem('Cart') : [];
       const ArrayCart = JSON.parse(OldCart);
       this.setState({
         carts : ArrayCart,
-        quantity: ArrayCart.length
       });
     }
 
- 
+    OnChangeQuantity = (value, index) =>{
+      // console.log(value);
+      // console.log(index);
+    //  var {carts} = this.state;
+       var Cart = JSON.parse(localStorage.getItem('Cart'));
+      if(Cart.length >0)
+      {
+        if(value !== -1)
+        {
+          Cart[index].quantity =Cart[index].quantity + value;
+          localStorage.setItem("Cart", JSON.stringify(Cart));
+          this.setState({
+            carts: localStorage.setItem("Cart", JSON.stringify(Cart))
+          });
+        }
+        else
+        {
+          if(Cart[index].quantity === 1)
+          {
+            swal("Không thể giảm được nữa!");
+          }
+          else
+          {
+            Cart[index].quantity =Cart[index].quantity + value;
+            localStorage.setItem("Cart", JSON.stringify(Cart));
+            this.setState({
+              carts: JSON.parse(localStorage.getItem("Cart"))
+            });
+          }
+        }
+      }
+    }
+
+    OnDelete = index =>{
+        var Cart = JSON.parse(localStorage.getItem('Cart'));
+        Cart.splice(index,1);
+        localStorage.setItem("Cart", JSON.stringify(Cart));
+      this.setState({
+        carts: JSON.parse(localStorage.getItem("Cart"))
+      }, ()=>swal("Đã Xóa!", "Kiểm tra lại giỏ hàng!", "success"));
+    }
     ShowCart = (carts)=>{
       var result = null;
       if(carts.length > 0)
       {
         result=carts.map((cart, index)=>{
           return (
-            <CartItem key={index} cart={cart} index={index}  />
+            <CartItem key={index} 
+            cart={cart} 
+            index={index}
+             OnChangeQuantity = {this.OnChangeQuantity}
+             OnDelete= {this.OnDelete} />
           )
         });
       }
@@ -39,7 +82,9 @@ class Checkout extends Component{
   
   render()
   {
-      var {carts, quantity} = this.state;
+      //var {carts, quantity} = this.state;
+      var carts = JSON.parse(localStorage.getItem('Cart'));
+      var quantity = JSON.parse(localStorage.getItem('Cart')).length;
         return(
             <div className="privacy">
             <div className="container">
