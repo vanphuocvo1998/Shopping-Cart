@@ -4,7 +4,7 @@ import Category from "./Pages/Category";
 import Cart from "./Pages/Checkout/Cart";
 import Checkout from "./Pages/Checkout/Checkout";
 import Notfound from "./Pages/Notfound";
-import Login from "./Pages/Login";
+
 const routes = [
     {
         path: "/",

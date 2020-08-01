@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import Menu from "./conponents/Menu";
 import Headertop from './conponents/Headertop';
-import Main from './conponents/Main/Main';
 import Slide from './conponents/Slide';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import routes from "./routes";
@@ -10,6 +9,14 @@ import LoginForm from './conponents/LoginForm';
 import SignupForm from './conponents/SignupForm';
 
 class App extends Component {
+
+  constructor(props)
+    {
+      super(props);
+      this.state={
+        isDisplayForm: false
+      }
+    }
 
   ShowContent = (route)=>{
     var result =null;
@@ -24,8 +31,20 @@ class App extends Component {
     return <Switch>{result}</Switch>
   }
 
-  render(){
+   CloseForm = ()=>{
+        this.setState({
+            isDisplayForm : false
+        });
+      }
 
+  ShowForm = () =>{
+        this.setState({
+            isDisplayForm : true
+        });
+    }
+
+  render(){
+    
     return (
       <Router>
             <div>
