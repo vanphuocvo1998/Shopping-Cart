@@ -5,7 +5,12 @@ import Main from './conponents/Main/Main';
 import Slide from './conponents/Slide';
 import { Switch, Route, BrowserRouter as Router } from 'react-router-dom';
 import routes from "./routes";
+
+import LoginForm from './conponents/LoginForm';
+import SignupForm from './conponents/SignupForm';
+
 class App extends Component {
+
   ShowContent = (route)=>{
     var result =null;
     if(routes.length >0)
@@ -18,96 +23,22 @@ class App extends Component {
     }
     return <Switch>{result}</Switch>
   }
+
   render(){
+
     return (
       <Router>
             <div>
                 <div className="header-most-top">
                   <p>Grocery Offer Zone Top Deals &amp; Discounts</p>
                 </div>
-            
                 <Headertop />
           {/* show city */}
             {/* //shop locator (popup) */}
             {/* signin Model */}
             {/* Modal1 */}
-            <div className="modal fade" id="myModal1" tabIndex={-1} role="dialog">
-              <div className="modal-dialog">
-        
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal">×</button>
-                  </div>
-                  <div className="modal-body modal-body-sub_agile">
-                    <div className="main-mailposi">
-                      <span className="fa fa-envelope-o" aria-hidden="true" />
-                    </div>
-                    <div className="modal_body_left modal_body_left1">
-                      <h3 className="agileinfo_sign">Sign In </h3>
-                      <p>
-                        Sign In now, Let's start your Grocery Shopping. Don't have an account?
-                        <a href="#" data-toggle="modal" data-target="#myModal2">
-                          Sign Up Now</a>
-                      </p>
-                      <form action="#" method="post">
-                        <div className="styled-input agile-styled-input-top">
-                          <input type="text" placeholder="User Name" name="Name" required />
-                        </div>
-                        <div className="styled-input">
-                          <input type="password" placeholder="Password" name="password" required />
-                        </div>
-                        <input type="submit" defaultValue="Sign In" />
-                      </form>
-                      <div className="clearfix" />
-                    </div>
-                    <div className="clearfix" />
-                  </div>
-                </div>
-            
-              </div>
-            </div>
-        
-            <div className="modal fade" id="myModal2" tabIndex={-1} role="dialog">
-              <div className="modal-dialog">
-                {/* Modal content*/}
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal">×</button>
-                  </div>
-                  <div className="modal-body modal-body-sub_agile">
-                    <div className="main-mailposi">
-                      <span className="fa fa-envelope-o" aria-hidden="true" />
-                    </div>
-                    <div className="modal_body_left modal_body_left1">
-                      <h3 className="agileinfo_sign">Sign Up</h3>
-                      <p>
-                        Come join the Grocery Shoppy! Let's set up your Account.
-                      </p>
-                      <form action="#" method="post">
-                        <div className="styled-input agile-styled-input-top">
-                          <input type="text" placeholder="Name" name="Name" required />
-                        </div>
-                        <div className="styled-input">
-                          <input type="email" placeholder="E-mail" name="Email" required />
-                        </div>
-                        <div className="styled-input">
-                          <input type="password" placeholder="Password" name="password" id="password1" required />
-                        </div>
-                        <div className="styled-input">
-                          <input type="password" placeholder="Confirm Password" name="Confirm Password" id="password2" required />
-                        </div>
-                        <input type="submit" defaultValue="Sign Up" />
-                      </form>
-                      <p>
-                        <a href="#">By clicking register, I agree to your terms</a>
-                      </p>
-                    </div>
-                  </div>
-                </div>
-          
-              </div>
-            </div>
-          
+            <LoginForm />
+            <SignupForm />
             <Menu />
             
             {this.ShowContent(routes)}

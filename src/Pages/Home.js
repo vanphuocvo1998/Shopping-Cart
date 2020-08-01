@@ -6,7 +6,7 @@ import Bookitem from './../conponents/Main/Bookitem';
 //axios lấy data
 import axios from 'axios';
 
-class Main extends Component{
+class Home extends Component{
     constructor(props)
     {
         super(props);
@@ -71,4 +71,4 @@ class Main extends Component{
     }
 }
 
-export default Main;
+export default Home;
