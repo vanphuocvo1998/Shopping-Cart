@@ -7,7 +7,8 @@ class LoginForm extends Component
         super(props);
         this.state={
         Gmail:"",
-        Password:""
+        Password:"",
+        Islogin: false
         }
     }
     OnChange = e=>{
@@ -31,15 +32,19 @@ class LoginForm extends Component
           localStorage.setItem("User", JSON.stringify(res.data.gmail));
           this.setState({
             Gmail: res.data.gmail,
-            Password: res.data.Password
+            Password: res.data.Password,
+            Islogin: true
           });
         })
         .catch(err=> {
+          this.setState({
+            Islogin:false
+          });
             console.log(err);
         });
       }
     render(){
-        var {Gmail, Password} = this.state;
+        var {Gmail, Password, Islogin} = this.state;
         return (
             <div className="modal fade" id="myModal1" tabIndex={-1} role="dialog">
               <div className="modal-dialog">
@@ -76,7 +81,7 @@ class LoginForm extends Component
                           onChange={this.OnChange}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary">Đăng nhập</button>
+                        <button type="submit" className="btn btn-primary" onClick={()=>this.props._IsLogin(Islogin, Gmail, Password)}>Đăng nhập</button>
                       </form>
                       <div className="clearfix" />
                     </div>

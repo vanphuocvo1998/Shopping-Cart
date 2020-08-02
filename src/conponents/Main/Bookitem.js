@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import "./Bookitem.css";
 import axios from "axios";
 import swal from 'sweetalert';
-
+import {Link} from "react-router-dom";
 class Bookitem extends Component{
 
     constructor(props)
@@ -151,14 +151,14 @@ class Bookitem extends Component{
                 <img src={`${process.env.PUBLIC_URL}/images/${bookbytype.img}`} className="bookimg" alt="" />
                 <div className="men-cart-pro">
                   <div className="inner-men-cart-pro">
-                    <a href="single.html" className="link-product-add-cart">Chi Tiết</a>
+                    <Link to={`/Products/${bookbytype.id}`} className="link-product-add-cart">Chi Tiết</Link>
                   </div>
                 </div>
                 <span className="product-new-top">New</span>
               </div>
               <div className="item-info-product ">
                 <h6>
-                  <a href="single.html">{bookbytype.nameBook}</a>
+                  <Link to={`/Products/${bookbytype.id}`}>{bookbytype.nameBook}</Link>
                 </h6>
                 <div className="info-product-price">
                   <span className="item_price">{bookbytype.price} VND</span>
@@ -191,14 +191,14 @@ class Bookitem extends Component{
                     <img src={`${process.env.PUBLIC_URL}/images/${book.img}`} className="bookimg" alt="" />
                     <div className="men-cart-pro">
                       <div className="inner-men-cart-pro">
-                        <a href="single.html" className="link-product-add-cart">Chi Tiết</a>
+                        <Link to={`/Products/${book.id}`} className="link-product-add-cart">Chi Tiết</Link>
                       </div>
                     </div>
                     <span className="product-new-top">New</span>
                   </div>
                   <div className="item-info-product ">
                     <h6>
-                      <a href="single.html">{book.nameBook}</a>
+                      <Link to={`/Products/${book.id}`}>{book.nameBook}</Link>
                     </h6>
                     <div className="info-product-price">
                       <span className="item_price">{book.price} VND</span>

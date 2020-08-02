@@ -9,7 +9,20 @@ class Checkout extends Component{
     super(props);
     this.state = {
       carts : [],
-     
+
+      //user
+      gmail:"",
+      address:"",
+      phone:"",
+
+      //bill
+      deliverytime:"",
+      deliveryplace:"",
+      status:"",
+
+      //bill detail
+      sumpay:""
+
     };
   }
 
@@ -103,38 +116,40 @@ class Checkout extends Component{
                 </h4>
                 <Cart> {this.ShowCart(carts)} </Cart>
               </div>
-              {/* <div className="checkout-left">
+
+              
+              <div className="checkout-left">
                 <div className="address_form_agile">
-                  <h4>Add a new Details</h4>
-                  <form action="payment.html" method="post" className="creditly-card-form agileinfo_form">
+                  <h4>Nhập Thông Tin Giao Hàng</h4>
+                  <form >
                     <div className="creditly-wrapper wthree, w3_agileits_wrapper">
                       <div className="information-wrapper">
                         <div className="first-row">
                           <div className="controls">
-                            <input className="billing-address-name" type="text" name="name" placeholder="Full Name" required />
+                            <input className="billing-address-name" type="text" name="gmail" placeholder="Nhập Gmail"  />
                           </div>
                           <div className="w3_agileits_card_number_grids">
                             <div className="w3_agileits_card_number_grid_left">
                               <div className="controls">
-                                <input type="text" placeholder="Mobile Number" name="number" required />
+                                <input type="text" placeholder="Nhập Địa Chỉ" name="address"  />
                               </div>
                             </div>
                             <div className="w3_agileits_card_number_grid_right">
                               <div className="controls">
-                                <input type="text" placeholder="Landmark" name="landmark" required />
+                                <input type="text" placeholder="Điện Thoại" name="phone"  />
                               </div>
                             </div>
                             <div className="clear"> </div>
                           </div>
                           <div className="controls">
-                            <input type="text" placeholder="Town/City" name="city" required />
+                            <input type="text" placeholder="Thành Phố/ Thị Trấn" name="city"  />
                           </div>
                           <div className="controls">
                             <select className="option-w3ls">
-                              <option>Select Address type</option>
-                              <option>Office</option>
-                              <option>Home</option>
-                              <option>Commercial</option>
+                              <option>Giao Tới</option>
+                              <option>Nhà</option>
+                              <option>Nơi Làm</option>
+                            
                             </select>
                           </div>
                         </div>
@@ -149,7 +164,9 @@ class Checkout extends Component{
                   </div>
                 </div>
                 <div className="clearfix"> </div>
-              </div> */}
+              </div>
+
+
             </div>
           </div>
 	 

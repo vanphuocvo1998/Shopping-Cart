@@ -1,12 +1,205 @@
 import React, {Component} from 'react';
-
+import axios from 'axios';
+import {Link} from "react-router-dom";
+import swal from 'sweetalert';
+import "./Main/Bookitem.css";
 class Slide extends Component{
+  constructor(props)
+    {
+        super(props);
+        this.state = {
+        books: [],
+        Cart: [], //danh sách sản phẩm trong giỏ hàng
+
+        // sản phẩm bỏ vào giỏ hàng
+        CartItem: {
+          id: "",
+          img:"",
+          name: "",
+          price: 0,
+          quantity: 0
+        }
+      }
+    }
+
+    componentDidMount(){
+        axios.get('https://localhost:44348/api/Books/GetAll')
+        .then(res=>{
+            this.setState({
+              books: res.data
+            });
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+     }
+     AddCart = (_id)=>{
+      // lấy ra danh sách cart trong local
+        var Cart = localStorage.getItem('Cart') ? localStorage.getItem('Cart') : [];
+        //nếu đã tồn tại giỏ hàng
+        if(Cart.length > 0)
+        {
+              // kiểm tra sp vừa chọn đã mua chưa
+              var index = this.findIndex(_id);
+              if(index === -1) // sp vưa chọn chưa mua, thì add vào giỏ hàng
+              {
+                axios.get(`https://localhost:44348/api/Books/GetById/${_id}`)
+                .then(res=>{
+                  //  console.log(res.data);
+                    this.setState({
+                      CartItem :{
+                        id:res.data.id,
+                        img: res.data.img,
+                        name: res.data.nameBook,
+                        price: res.data.price,
+                        quantity: 1
+                      }
+                    }, ()=>{ 
+                    var {Cart,CartItem} = this.state;
+                    const  OldCart = localStorage.getItem('Cart') ? localStorage.getItem('Cart') : [];
+                    const arrayCart =  JSON.parse(OldCart); 
+                    arrayCart.push(CartItem);
+                      this.setState({
+                          Cart: arrayCart
+                      },()=> localStorage.setItem("Cart", JSON.stringify(arrayCart)));
+                      }); 
+                })
+                .catch(err=> {
+                    console.log(err);
+                });
+              }
+              else // nếu sp vừa chọn đã mua rồi thì tăng số lượng và giá lên
+              {
+                axios.get(`https://localhost:44348/api/Books/GetById/${_id}`)
+                              .then(res=>{
+                                // tìm vị trí sp đã mua trong giỏ hàng
+                                const  _OldCart = localStorage.getItem('Cart') ;
+                                const _arrayCart =  JSON.parse(_OldCart);  
+                                var index = this.findIndex(res.data.id);
+                                  this.setState({
+                                    CartItem :{
+                                      id:res.data.id,
+                                      img: res.data.img,
+                                      name: res.data.nameBook,
+                                      // tăng số lượng và giá tiền lên
+                                      price: res.data.price * (_arrayCart[index].quantity +1),
+                                      quantity: _arrayCart[index].quantity +1
+                                    }
+                                  }, ()=>{ 
+                                    // cập nhật lại trong local storage và state Cart
+                                    var {CartItem} = this.state;
+                                    const  OldCart = localStorage.getItem('Cart') ? localStorage.getItem('Cart') : "[]";
+                                    const arrayCart =  JSON.parse(OldCart);  
+                                    var index = this.findIndex(CartItem.id);
+                                    arrayCart[index].price = CartItem.price;
+                                    arrayCart[index].quantity = CartItem.quantity;
+                                    this.setState({
+                                        Cart: arrayCart
+                                    },()=>localStorage.setItem("Cart", JSON.stringify(arrayCart)));
+                                    });
+                                  
+                              })
+                              .catch(err=> {
+                                  console.log(err);
+                              });
+            }
+
+        }
+        else // nếu giỏ hàng rỗng thì tiến hành mua hàng và lưu vào local storage
+        {
+          axios.get(`https://localhost:44348/api/Books/GetById/${_id}`)
+          .then(res=>{
+
+              this.setState({
+                CartItem :{
+                  id:res.data.id,
+                  img: res.data.img,
+                  name: res.data.nameBook,
+                  price: res.data.price,
+                  quantity: 1
+                }
+              }, ()=>{ 
+                var {CartItem} = this.state;
+            
+              var arrayCart = [];
+              arrayCart.push(CartItem);
+                this.setState({
+                    Cart: arrayCart
+                },()=> localStorage.setItem("Cart", JSON.stringify(arrayCart)));
+                });
+          })
+          .catch(err=> {
+              console.log(err);
+          });
+        }
+        swal("Thêm Vào Giỏ Hàng Thành Công!", "Vui Lòng Kiểm Tra Lại Giỏ Hàng!", "success");
+    }
+
+    
+  findIndex = (_id)=>{
+   
+      // var{Cart}= this.state;
+      var Cart = JSON.parse(localStorage.getItem('Cart'));
+      var vitri = -1;
+       if(Cart.length >0)
+       {
+         Cart.forEach((item, index) => {
+               if(item.id === _id)
+               {
+                   vitri= index;
+               }
+            });
+       }
+       return vitri;
+   }
+
+     ShowBook = (books)=>{
+      var result = null;
+      if(books.length > 0)
+      {
+        result=books.map((book, index)=>{
+          return (
+            <li className="nbs-flexisel-item" style={{width: '342px'}} key ={index}>
+            <div className="w3l-specilamk">
+              <div className="speioffer-agile">
+                <Link to={`/Products/${book.id}`} >
+                  <img src={`${process.env.PUBLIC_URL}/images/${book.img}`} className="bookimg" alt="" />
+                </Link>
+              </div>
+              <div className="product-name-w3l">
+                <h6>
+                  <Link to={`/Products/${book.id}`}>{book.nameBook}</Link>
+                </h6>
+                <div className="w3l-pricehkj">
+                  <h6>{book.price *(100 - book.sale)}</h6>
+                  <p>Tiết kiệm {book.sale}% </p>
+                </div>
+                <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
+                <form >
+                    <input 
+                    type="button" 
+                    name="addcart" 
+                    value="Thêm Giỏ Hàng"  
+                    className="button" 
+                      onClick={()=>this.AddCart(book.id)}
+                    />           
+                  </form>
+                </div>
+              </div>
+            </div>
+          </li>
+          )
+        });
+      }
+      return result;
+    }
     render(){
+      var {books} = this.state;
         return(
             <div className="featured-section" id="projects">
         <div className="container">
           {/* tittle heading */}
-          <h3 className="tittle-w3l">Special Offers
+          <h3 className="tittle-w3l">Sách Nổi Bật
             <span className="heading-style">
               <i />
               <i />
@@ -15,544 +208,13 @@ class Slide extends Component{
           </h3>
           {/* //tittle heading */}
           <div className="content-bottom-in">
-            <div className="nbs-flexisel-container"><div className="nbs-flexisel-inner"><ul id="flexiselDemo1" className="nbs-flexisel-ul" style={{left: '-342px'}}>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s8.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Cadbury Choclairs, 655.5g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$160.00</h6>
-                          <p>Save $60.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Cadbury Choclairs, 655.5g" />
-                              <input type="hidden" name="amount" defaultValue={160.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s6.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Fair &amp; Lovely, 80 g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$121.60</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Fair & Lovely, 80 g" />
-                              <input type="hidden" name="amount" defaultValue="121.60" />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s5.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Sprite, 2.25L (Pack of 2)</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$180.00</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Sprite, 2.25L (Pack of 2)" />
-                              <input type="hidden" name="amount" defaultValue={180.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s9.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Lakme Eyeconic Kajal, 0.35 g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$153.00</h6>
-                          <p>Save $40.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Lakme Eyeconic Kajal, 0.35 g" />
-                              <input type="hidden" name="amount" defaultValue={153.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s1.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Aashirvaad, 5g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$220.00</h6>
-                          <p>Save $40.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Aashirvaad, 5g" />
-                              <input type="hidden" name="amount" defaultValue={220.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s4.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Kissan Tomato Ketchup, 950g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$99.00</h6>
-                          <p>Save $20.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Kissan Tomato Ketchup, 950g" />
-                              <input type="hidden" name="amount" defaultValue={99.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s2.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Madhur Pure Sugar, 1g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$69.00</h6>
-                          <p>Save $20.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Madhur Pure Sugar, 1g" />
-                              <input type="hidden" name="amount" defaultValue={69.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s3.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Surf Excel Liquid, 1.02L</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$187.00</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Surf Excel Liquid, 1.02L" />
-                              <input type="hidden" name="amount" defaultValue={187.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s8.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Cadbury Choclairs, 655.5g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$160.00</h6>
-                          <p>Save $60.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Cadbury Choclairs, 655.5g" />
-                              <input type="hidden" name="amount" defaultValue={160.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s6.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Fair &amp; Lovely, 80 g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$121.60</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Fair & Lovely, 80 g" />
-                              <input type="hidden" name="amount" defaultValue="121.60" />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s5.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Sprite, 2.25L (Pack of 2)</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$180.00</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Sprite, 2.25L (Pack of 2)" />
-                              <input type="hidden" name="amount" defaultValue={180.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s9.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Lakme Eyeconic Kajal, 0.35 g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$153.00</h6>
-                          <p>Save $40.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Lakme Eyeconic Kajal, 0.35 g" />
-                              <input type="hidden" name="amount" defaultValue={153.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s1.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Aashirvaad, 5g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$220.00</h6>
-                          <p>Save $40.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Aashirvaad, 5g" />
-                              <input type="hidden" name="amount" defaultValue={220.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s4.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Kissan Tomato Ketchup, 950g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$99.00</h6>
-                          <p>Save $20.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Kissan Tomato Ketchup, 950g" />
-                              <input type="hidden" name="amount" defaultValue={99.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single.html">
-                          <img src="images/s2.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single.html">Madhur Pure Sugar, 1g</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$69.00</h6>
-                          <p>Save $20.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                            <fieldset>
-                              <input type="hidden" name="cmd" defaultValue="_cart" />
-                              <input type="hidden" name="add" defaultValue={1} />
-                              <input type="hidden" name="business" defaultValue=" " />
-                              <input type="hidden" name="item_name" defaultValue="Madhur Pure Sugar, 1g" />
-                              <input type="hidden" name="amount" defaultValue={69.00} />
-                              <input type="hidden" name="discount_amount" defaultValue={1.00} />
-                              <input type="hidden" name="currency_code" defaultValue="USD" />
-                              <input type="hidden" name="return" defaultValue=" " />
-                              <input type="hidden" name="cancel_return" defaultValue=" " />
-                              <input type="submit" name="submit" defaultValue="Add to cart" className="button" />
-                            </fieldset>
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  <li className="nbs-flexisel-item" style={{width: '342px'}}>
-                    <div className="w3l-specilamk">
-                      <div className="speioffer-agile">
-                        <a href="single2.html">
-                          <img src="images/s3.jpg" alt="" />
-                        </a>
-                      </div>
-                      <div className="product-name-w3l">
-                        <h4>
-                          <a href="single2.html">Surf Excel Liquid, 1.02L</a>
-                        </h4>
-                        <div className="w3l-pricehkj">
-                          <h6>$187.00</h6>
-                          <p>Save $30.00</p>
-                        </div>
-                        <div className="snipcart-details top_brand_home_details item_add single-item hvr-outline-out">
-                          <form action="#" method="post">
-                              <input type="submit" name="submit" value="Add to cart" className="button" />
-                          </form>
-                        </div>
-                      </div>
-                    </div>
-                  </li>
-                  </ul>
-                  <div className="nbs-flexisel-nav-left" style={{top: '174px'}} />
+            <div className="nbs-flexisel-container"><div className="nbs-flexisel-inner">
+                <ul id="flexiselDemo1" className="nbs-flexisel-ul" style={{left: '-342px'}}>
+                     {this.ShowBook(books)}
+                </ul>
+                  <div className="nbs-flexisel-nav-left" style={{top: '174px'}} /></div>
                   <div className="nbs-flexisel-nav-right" style={{top: '174px'}} /></div>
-                  </div>
+                  
           </div>
         </div>
       </div>

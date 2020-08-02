@@ -14,10 +14,20 @@ class App extends Component {
     {
       super(props);
       this.state={
-        isDisplayForm: false
+        Gmail:"",
+        Password:"",
+        IsLogin: false
       }
     }
 
+  IsLogin = (IsLogin, Gmail, Password)=>{
+    //console.log(IsLogin);
+    this.setState({
+      Gmail: Gmail,
+      Password:Password,
+      IsLogin: IsLogin
+    });
+  }
   ShowContent = (route)=>{
     var result =null;
     if(routes.length >0)
@@ -31,18 +41,6 @@ class App extends Component {
     return <Switch>{result}</Switch>
   }
 
-   CloseForm = ()=>{
-        this.setState({
-            isDisplayForm : false
-        });
-      }
-
-  ShowForm = () =>{
-        this.setState({
-            isDisplayForm : true
-        });
-    }
-
   render(){
     
     return (
@@ -51,12 +49,12 @@ class App extends Component {
                 <div className="header-most-top">
                   <p>Grocery Offer Zone Top Deals &amp; Discounts</p>
                 </div>
-                <Headertop />
+                <Headertop User={this.state.Gmail}/>
           {/* show city */}
             {/* //shop locator (popup) */}
             {/* signin Model */}
             {/* Modal1 */}
-            <LoginForm />
+            <LoginForm _IsLogin={this.IsLogin} />
             <SignupForm />
             <Menu />
             
