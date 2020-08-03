@@ -11,17 +11,20 @@ class Checkout extends Component{
       carts : [],
 
       //user
-      gmail:"",
-      address:"",
-      phone:"",
+      user: [],
+       gmail:"",
+       address:"",
+       phone:"",
 
       //bill
-      deliverytime:"",
-      deliveryplace:"",
-      status:"",
+      bill: [],
+      // deliverytime:"",
+      // deliveryplace:"",
+      // status:"",
 
       //bill detail
-      sumpay:""
+      billdetail: [],
+      //sumpay:""
 
     };
   }
@@ -141,7 +144,7 @@ class Checkout extends Component{
                             </div>
                             <div className="clear"> </div>
                           </div>
-                          <div className="controls">
+                          {/* <div className="controls">
                             <input type="text" placeholder="Thành Phố/ Thị Trấn" name="city"  />
                           </div>
                           <div className="controls">
@@ -151,14 +154,14 @@ class Checkout extends Component{
                               <option>Nơi Làm</option>
                             
                             </select>
-                          </div>
+                          </div> */}
                         </div>
-                        <button className="submit check_out">Delivery to this Address</button>
+                        <button className="submit check_out">Giao Tới Địa Chỉ Trên</button>
                       </div>
                     </div>
                   </form>
                   <div className="checkout-right-basket">
-                    <a href="payment.html">Make a Payment
+                    <a href="payment.html">Thanh Toán
                       <span className="fa fa-hand-o-right" aria-hidden="true" />
                     </a>
                   </div>

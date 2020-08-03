@@ -1,43 +1,33 @@
 import React, {Component} from 'react';
 import {Link} from "react-router-dom"
 import "./Headertop.css";
+
 class Headertop extends Component
 {
     constructor(props)
     {
       super(props);
       this.state={
-        user:""
+        user:"",
       }
     }
-    // Logout = ()=>{
-    //   this.setState({
-    //     user:""
-    //   });
-    //   localStorage.removeItem("User");
-    // }
+   
     
     componentDidMount()
     {
-      var {User} = this.props;
+      // var {User} = this.props;
       
-        this.setState({
-          user: User
+      //   this.setState({
+      //     user: User
        
-      });
+      // });
     }
 
-    // componentDidUpdate()
-    // {
-    //   var {User} = this.props;
-    //   if(User !=="undefined" || User.length!==0)
-    //   {
-    //     this.setState({
-    //       user: User
-    //     });
-    //   }
-    // }
  
+    Login = (value)=>
+    {
+      this.props.closeform(value);
+    }
     render(){
     
         return (
@@ -58,23 +48,23 @@ class Headertop extends Component
                 {/* header lists */}
                 <ul>
               <li>
-                <a className="play-icon popup-with-zoom-anim" href="#small-dialog1">
+                <a className="play-icon popup-with-zoom-anim" >
                   <span className="fa fa-map-marker" aria-hidden="true" /> Shop Locator</a>
               </li>
               <li>
-                <a href="#" data-toggle="modal" data-target="#myModal1">
+                <a  data-toggle="modal" data-target="#myModal1">
                   <span className="fa fa-truck" aria-hidden="true" />Track Order</a>
               </li>
               <li>
                 <span className="fa fa-phone" aria-hidden="true" /> 001 234 5678
               </li>
               <li>
-                <a href="#" data-toggle="modal" data-target="#myModal1">
-                  <span className="fa fa-unlock-alt" aria-hidden="true" /> Sign In </a>
+                <button  data-toggle="modal" data-target="#myModal1" onClick={()=>this.Login("modal")} >
+                  <span className="fa fa-unlock-alt" aria-hidden="true" /> Đăng Nhập </button>
               </li>
               <li>
-                <a href="#" data-toggle="modal" data-target="#myModal2">
-                  <span className="fa fa-pencil-square-o" aria-hidden="true" /> Sign Up </a>
+                <button  data-toggle="modal" data-target="#myModal2">
+                  <span className="fa fa-pencil-square-o" aria-hidden="true" /> Đăng Ký </button>
               </li>
             </ul>
   
@@ -90,8 +80,7 @@ class Headertop extends Component
                 <div className="top_nav_right">
                   <div className="wthreecartaits wthreecartaits2 cart cart box_1">
                     <form action="#" method="post" className="last">
-                      <input type="hidden" name="cmd" defaultValue="_cart" />
-                      <input type="hidden" name="display" defaultValue={1} />
+                   
                       <Link className="w3view-cart cart" type="submit" name="submit" to="/Checkout" value>
                         <i className="fa fa-shopping-cart" aria-hidden="true" />
                       </Link>

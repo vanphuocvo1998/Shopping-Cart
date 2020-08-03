@@ -28,23 +28,30 @@ class LoginForm extends Component
         user.set('Password',Password);
         axios.post("https://localhost:44348/api/User/Login", user)
         .then(res=>{
-          // console.log(res);
-          localStorage.setItem("User", JSON.stringify(res.data.gmail));
-          this.setState({
-            Gmail: res.data.gmail,
-            Password: res.data.Password,
-            Islogin: true
-          });
+           console.log(res.data);
+          // localStorage.setItem("User", JSON.stringify(res.data.gmail));
+          // this.setState({
+          //   Gmail: res.data.gmail,
+          //   Password: res.data.Password,
+          //   Islogin: true
+          // }, ()=>this.IsLogin_(this.state.Islogin, this.state.Gmail, this.state.Password));
         })
         .catch(err=> {
-          this.setState({
-            Islogin:false
-          });
+          // this.setState({
+          //   Islogin:false
+          // });
             console.log(err);
         });
       }
+
+    IsLogin_ =  (Islogin, Gmail, Password) =>
+    {
+      //  setTimeout(()=>  this.props._IsLogin(Islogin, Gmail, Password), 1000)
+      this.props._IsLogin(Islogin, Gmail, Password);
+    }
     render(){
         var {Gmail, Password, Islogin} = this.state;
+        var {closeform} = this.props;
         return (
             <div className="modal fade" id="myModal1" tabIndex={-1} role="dialog">
               <div className="modal-dialog">
@@ -81,7 +88,8 @@ class LoginForm extends Component
                           onChange={this.OnChange}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary" onClick={()=>this.props._IsLogin(Islogin, Gmail, Password)}>Đăng nhập</button>
+                        <button type="submit" className="btn btn-primary" data-dismiss={closeform}
+                        >Đăng nhập</button>
                       </form>
                       <div className="clearfix" />
                     </div>

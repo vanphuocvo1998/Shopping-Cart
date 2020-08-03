@@ -16,17 +16,27 @@ class App extends Component {
       this.state={
         Gmail:"",
         Password:"",
-        IsLogin: false
+        IsLogin: false,
+        closeform:"",
       }
     }
 
   IsLogin = (IsLogin, Gmail, Password)=>{
-    //console.log(IsLogin);
+  //  console.log(IsLogin);
+  //  console.log(Gmail);
+  //   console.log(Password);
+    // this.setState({
+    //   Gmail: Gmail,
+    //   Password:Password,
+    //   IsLogin: IsLogin
+    // });
+  }
+
+  closeform = (value)=>{
     this.setState({
-      Gmail: Gmail,
-      Password:Password,
-      IsLogin: IsLogin
+      closeform: value
     });
+  
   }
   ShowContent = (route)=>{
     var result =null;
@@ -41,20 +51,20 @@ class App extends Component {
     return <Switch>{result}</Switch>
   }
 
-  render(){
-    
+  render(){ 
+    var {closeform} = this.state;
     return (
       <Router>
             <div>
                 <div className="header-most-top">
                   <p>Grocery Offer Zone Top Deals &amp; Discounts</p>
                 </div>
-                <Headertop User={this.state.Gmail}/>
+                <Headertop User={this.state.Gmail} closeform={this.closeform} />
           {/* show city */}
             {/* //shop locator (popup) */}
             {/* signin Model */}
             {/* Modal1 */}
-            <LoginForm _IsLogin={this.IsLogin} />
+            <LoginForm _IsLogin={this.IsLogin} closeform={closeform}/>
             <SignupForm />
             <Menu />
             

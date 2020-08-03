@@ -209,7 +209,7 @@ class Slide extends Component{
           {/* //tittle heading */}
           <div className="content-bottom-in">
             <div className="nbs-flexisel-container"><div className="nbs-flexisel-inner">
-                <ul id="flexiselDemo1" className="nbs-flexisel-ul" style={{left: '-342px'}}>
+                <ul  className="nbs-flexisel-ul" style={{left: '-342px'}}>
                      {this.ShowBook(books)}
                 </ul>
                   <div className="nbs-flexisel-nav-left" style={{top: '174px'}} /></div>
