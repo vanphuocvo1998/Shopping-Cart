@@ -26,7 +26,7 @@ class LoginForm extends Component
         var user = new FormData();
         user.set('Gmail',Gmail);
         user.set('Password',Password);
-        axios.post("https://localhost:44348/api/User/Login", user)
+        axios.post("https://localhost:44348/api/User/Login/", user)
         .then(res=>{
            console.log(res.data);
           // localStorage.setItem("User", JSON.stringify(res.data.gmail));
