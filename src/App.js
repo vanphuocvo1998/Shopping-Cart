@@ -17,7 +17,7 @@ class App extends Component {
         Gmail:"",
         Password:"",
         IsLogin: false,
-        closeform:"",
+        closeform:false,
       }
     }
 
@@ -38,7 +38,7 @@ class App extends Component {
     });
   
   }
-  ShowContent = (route)=>{
+  ShowContent = (routes)=>{
     var result =null;
     if(routes.length >0)
     {

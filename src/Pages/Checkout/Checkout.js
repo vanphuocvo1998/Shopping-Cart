@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import CartItem from "./CartItem";
 import Cart from "./Cart";
 import swal from 'sweetalert';
+import axios from "axios"
 class Checkout extends Component{
 
   constructor(props)
@@ -96,8 +97,69 @@ class Checkout extends Component{
       return result;
     }
   
+    // đặt hàng
+    onChange =(e)=>{
+      var target = e.target;
+      var name = target.name;
+      var value = target.type=="checkbox" ? target.checked : target.value;
+      this.setState({
+        [name]: value
+      });
+    }
+
+    onSave = (e)=>{
+      e.preventDefault();
+      const _Cart = JSON.parse(localStorage.getItem('Cart'));
+      var {gmail, address, phone} = this.state;
+      var user = new FormData();
+      user.set('Gmail',gmail);
+      user.set('Password',"");
+      user.set('Address',address);
+      user.set('Phone',phone);
+      user.set('Usertype',2);
+      axios.post("https://localhost:44348/api/User/AddUser", user)
+        .then(res=>{
+         //  console.log(res.data);
+         //lấy ra ngay giờ hien tai
+              // var d = new Date();
+              // var n = d.toString();
+              var bill = new FormData();
+              bill.set('UserId',res.data.id);
+              bill.set('Gmail',res.data.gmail);
+              bill.set('Phone',res.data.phone);
+              bill.set('Deliverytime',"Sau 3 ngày kể từ ngày đặt!");
+              bill.set('Deliverytime',res.data.address);
+              
+              axios.post("https://localhost:44348/api/Bills/AddBill", bill).then(res=>{
+                 // console.log(res.data);
+                 
+                    for(var i=0; i<_Cart.length; i++)
+                    {
+                        var billdetail = new FormData();
+                        billdetail.set('Bill',res.data.id);
+                        billdetail.set('Book',_Cart[i].id);
+                        billdetail.set('Quantity',_Cart[i].quantity);
+                        billdetail.set('Price',_Cart[i].price);
+                        billdetail.set('Sumpay',_Cart[i].quantity*_Cart[i].price);
+                        axios.post("https://localhost:44348/api/Billdetails/AddBilldetail", billdetail).then(res=>{
+                          console.log(res.data);
+                        }).catch(err=>{
+                          console.log(err);
+                        });
+                   }
+              }).catch(err=>{
+                console.log(err);
+              });
+
+        })
+        .catch(err=> {
+            console.log(err);
+        });
+    }
+
   render()
   {
+    var {gmail, address, phone} = this.state;
       //var {carts, quantity} = this.state;
       var carts = JSON.parse(localStorage.getItem('Cart'));
       var quantity = JSON.parse(localStorage.getItem('Cart')).length;
@@ -124,22 +186,37 @@ class Checkout extends Component{
               <div className="checkout-left">
                 <div className="address_form_agile">
                   <h4>Nhập Thông Tin Giao Hàng</h4>
-                  <form >
+                  <form onSubmit={this.onSave}>
                     <div className="creditly-wrapper wthree, w3_agileits_wrapper">
                       <div className="information-wrapper">
                         <div className="first-row">
                           <div className="controls">
-                            <input className="billing-address-name" type="text" name="gmail" placeholder="Nhập Gmail"  />
+                            <input className="billing-address-name"
+                             type="text" 
+                             name="gmail" 
+                             placeholder="Nhập Gmail" 
+                             value={gmail}
+                             onChange={this.onChange}
+                              />
                           </div>
                           <div className="w3_agileits_card_number_grids">
                             <div className="w3_agileits_card_number_grid_left">
                               <div className="controls">
-                                <input type="text" placeholder="Nhập Địa Chỉ" name="address"  />
+                                <input type="text"
+                                 placeholder="Nhập Địa Chỉ" 
+                                 name="address"  
+                                 value={address}
+                                onChange={this.onChange}
+                                 />
                               </div>
                             </div>
                             <div className="w3_agileits_card_number_grid_right">
                               <div className="controls">
-                                <input type="text" placeholder="Điện Thoại" name="phone"  />
+                                <input type="text" 
+                                placeholder="Điện Thoại" 
+                                name="phone" 
+                                value={phone}
+                              onChange={this.onChange} />
                               </div>
                             </div>
                             <div className="clear"> </div>
@@ -156,7 +233,7 @@ class Checkout extends Component{
                             </select>
                           </div> */}
                         </div>
-                        <button className="submit check_out">Giao Tới Địa Chỉ Trên</button>
+                        <button type="submit">Đặt Hàng Tới Địa Chỉ Trên</button>
                       </div>
                     </div>
                   </form>

@@ -26,10 +26,10 @@ class LoginForm extends Component
         var user = new FormData();
         user.set('Gmail',Gmail);
         user.set('Password',Password);
-        axios.post("https://localhost:44348/api/User/Login/", user)
+        axios.post("https://localhost:44348/api/User/Login", user)
         .then(res=>{
            console.log(res.data);
-          // localStorage.setItem("User", JSON.stringify(res.data.gmail));
+           localStorage.setItem("User", JSON.stringify(res.data.gmail));
           // this.setState({
           //   Gmail: res.data.gmail,
           //   Password: res.data.Password,
@@ -37,9 +37,6 @@ class LoginForm extends Component
           // }, ()=>this.IsLogin_(this.state.Islogin, this.state.Gmail, this.state.Password));
         })
         .catch(err=> {
-          // this.setState({
-          //   Islogin:false
-          // });
             console.log(err);
         });
       }
@@ -65,7 +62,7 @@ class LoginForm extends Component
                       <span className="fa fa-envelope-o" aria-hidden="true" />
                     </div>
                     <div className="modal_body_left modal_body_left1">
-                      <h3 className="agileinfo_sign">Đăng Nhập </h3>
+                      <h3 className="agileinfo_sign">Đăng Nhậpss </h3>
                       <p>
                         Chưa có tài khoản?
                         <a href="#" data-toggle="modal" data-target="#myModal2">
@@ -88,8 +85,9 @@ class LoginForm extends Component
                           onChange={this.OnChange}
                             />
                         </div>
-                        <button type="submit" className="btn btn-primary" data-dismiss={closeform}
+                        <button type="submit" className="btn btn-primary"
                         >Đăng nhập</button>
+                        {/* <button type="submit" className="btn btn-primary close "  value="Đăng Nhập" /> */}
                       </form>
                       <div className="clearfix" />
                     </div>
