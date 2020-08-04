@@ -10,23 +10,9 @@ class Checkout extends Component{
     super(props);
     this.state = {
       carts : [],
-
-      //user
-      user: [],
        gmail:"",
        address:"",
        phone:"",
-
-      //bill
-      bill: [],
-      // deliverytime:"",
-      // deliveryplace:"",
-      // status:"",
-
-      //bill detail
-      billdetail: [],
-      //sumpay:""
-
     };
   }
 
@@ -142,7 +128,16 @@ class Checkout extends Component{
                         billdetail.set('Price',_Cart[i].price);
                         billdetail.set('Sumpay',_Cart[i].quantity*_Cart[i].price);
                         axios.post("https://localhost:44348/api/Billdetails/AddBilldetail", billdetail).then(res=>{
-                          console.log(res.data);
+                          //console.log(res.data);
+                          this.setState({
+                            carts : [],
+                            gmail:"",
+                            address:"",
+                            phone:"",
+                          }, ()=>{
+                            localStorage.setItem("Cart", JSON.stringify(this.state.carts));
+                            swal("Đặt Hàng Thành Công!", "Check lại Gmail Or SĐT !", "success")}
+                            );
                         }).catch(err=>{
                           console.log(err);
                         });
@@ -161,8 +156,8 @@ class Checkout extends Component{
   {
     var {gmail, address, phone} = this.state;
       //var {carts, quantity} = this.state;
-      var carts = JSON.parse(localStorage.getItem('Cart'));
-      var quantity = JSON.parse(localStorage.getItem('Cart')).length;
+      var carts = JSON.parse(localStorage.getItem('Cart'))? JSON.parse(localStorage.getItem('Cart')): [];
+      var quantity = JSON.parse(localStorage.getItem('Cart')).length >0 ? quantity: 0;
         return(
             <div className="privacy">
             <div className="container">
