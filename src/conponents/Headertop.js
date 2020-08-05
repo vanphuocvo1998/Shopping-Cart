@@ -70,7 +70,7 @@ class Headertop extends Component
   
                 <div className="agileits_search">
                   <form action="#" method="post">
-                    <input name="Search" type="search" placeholder="How can we help you today?" required />
+                    <input name="Search" type="search" placeholder="Bạn cần tìm gì?" />
                     <button type="submit" className="btn btn-default" aria-label="Left Align">
                       <span className="fa fa-search" aria-hidden="true"> </span>
                     </button>
