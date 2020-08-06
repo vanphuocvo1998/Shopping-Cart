@@ -95,6 +95,8 @@ class Checkout extends Component{
 
     onSave = (e)=>{
       e.preventDefault();
+      var nameshop = "Book Shop";
+      var Message="Cảm ơn bạn đã mua hàng"
       const _Cart = JSON.parse(localStorage.getItem('Cart'));
       var {gmail, address, phone} = this.state;
       var user = new FormData();
@@ -136,16 +138,26 @@ class Checkout extends Component{
                             phone:"",
                           }, ()=>{
                             localStorage.setItem("Cart", JSON.stringify(this.state.carts));
-                            swal("Đặt Hàng Thành Công!", "Check lại Gmail Or SĐT !", "success")}
+                            swal("Đặt Hàng Thành Công!", "Check lại Gmail Or SĐT !", "success");
+                           
+                          }
                             );
                         }).catch(err=>{
                           console.log(err);
                         });
                    }
+                  
               }).catch(err=>{
                 console.log(err);
               });
-
+              
+            //  console.log(res.data);
+              axios.get(`https://localhost:44348/api/MailSend/SendEmail/${nameshop}/${res.data.gmail}/${Message}`)
+              .then(_res=>{
+               console.log(_res);
+              }).catch(_err=>{
+               console.log(_err);
+              });
         })
         .catch(err=> {
             console.log(err);

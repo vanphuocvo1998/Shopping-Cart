@@ -1,7 +1,15 @@
 import React, {Component} from 'react';
 
+import axios from "axios";
 class Footer extends Component
 {
+  LoginFacebook =()=>{
+    axios.get("https://localhost:44348/api/User/LoginFacebook").then(res=>{
+      console.log(res);
+    }).catch(err=>{
+      console.log(err);
+    });
+  }
     render(){
         return(
             <footer>
@@ -106,7 +114,7 @@ class Footer extends Component
                   <div className="social">
                     <ul>
                       <li>
-                        <a className="icon fb" href="#">
+                        <a className="icon fb"  onClick={this.LoginFacebook}>
                           <i className="fa fa-facebook" />
                         </a>
                       </li>
