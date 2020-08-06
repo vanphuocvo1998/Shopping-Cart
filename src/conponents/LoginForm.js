@@ -38,53 +38,54 @@ class LoginForm extends Component
         var {Gmail, Password} = this.state;
        
         return (
-            <div className="modal fade" id="myModal1" tabIndex={-1} role="dialog">
-              <div className="modal-dialog">
+          //classname: modal fade
+            // <div className="" id="myModal1" tabIndex={-1} role="dialog">
+            //   <div className="modal-dialog">
         
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <button type="button" className="close" data-dismiss="modal">×</button>
-                  </div>
-                  <div className="modal-body modal-body-sub_agile">
-                    <div className="main-mailposi">
-                      <span className="fa fa-envelope-o" aria-hidden="true" />
-                    </div>
-                    <div className="modal_body_left modal_body_left1">
-                      <h3 className="agileinfo_sign">Đăng Nhập </h3>
-                      <p>
-                        Chưa có tài khoản?
-                        <a href="#" data-toggle="modal" data-target="#myModal2">
-                         Tạo tài khoản ngay!</a>
-                      </p>
-                      <form onSubmit={this.onSave}>
-                        <div className="styled-input agile-styled-input-top">
-                          <input type="text"
-                           placeholder="User Name" 
-                          name="Gmail" 
-                          value={Gmail}
-                          onChange={this.OnChange}
-                           />
-                        </div>
-                        <div className="styled-input">
-                          <input type="password" 
-                          placeholder="Password"
-                           name="Password" 
-                           value={Password}
-                          onChange={this.OnChange}
-                            />
-                        </div>
-                        <button type="submit" className="btn btn-primary"
-                        >Đăng nhập</button>
-                        {/* <button type="submit" className="btn btn-primary close "  value="Đăng Nhập" /> */}
-                      </form>
-                      <div className="clearfix" />
-                    </div>
-                    <div className="clearfix" />
-                  </div>
-                </div>
+            //     <div className="modal-content">
+            //       <div className="modal-header">
+            //         <button type="button" className="close" data-dismiss="modal">×</button>
+            //       </div>
+            //       <div className="modal-body modal-body-sub_agile">
+            //         <div className="main-mailposi">
+            //           <span className="fa fa-envelope-o" aria-hidden="true" />
+            //         </div>
+            //         <div className="modal_body_left modal_body_left1">
+            //           <h3 className="agileinfo_sign">Đăng Nhập </h3>
+            //           <p>
+            //             Chưa có tài khoản?
+            //             <a href="#" data-toggle="modal" data-target="#myModal2">
+            //              Tạo tài khoản ngay!</a>
+            //           </p>
+            //           <form onSubmit={this.onSave}>
+            //             <div className="styled-input agile-styled-input-top">
+            //               <input type="text"
+            //                placeholder="User Name" 
+            //               name="Gmail" 
+            //               value={Gmail}
+            //               onChange={this.OnChange}
+            //                />
+            //             </div>
+            //             <div className="styled-input">
+            //               <input type="password" 
+            //               placeholder="Password"
+            //                name="Password" 
+            //                value={Password}
+            //               onChange={this.OnChange}
+            //                 />
+            //             </div>
+            //             <button type="submit" className="btn btn-primary"
+            //             >Đăng nhập</button>
+            //             {/* <button type="submit" className="btn btn-primary close "  value="Đăng Nhập" /> */}
+            //           </form>
+            //           <div className="clearfix" />
+            //         </div>
+            //         <div className="clearfix" />
+            //       </div>
+            //     </div>
             
-              </div>
-            </div>
+            //   </div>
+             <div></div>
         )
     }
 }

@@ -3,20 +3,24 @@ import {Link} from "react-router-dom"
 import "./Headertop.css";
 
 class Headertop extends Component
-{
+{ 
     constructor(props)
     {
       super(props);
+      this.state={
+        user:""
+      }
     }
-   
     
-    componentDidMount()
-    {
-      
+    RedirectLogin=()=>{
+    // window.location.replace('http://localhost:4000/Login');
+    this.props.OpenLogin(true);
+    }
+    RedirectSignup=()=>{
+      window.location.replace('http://localhost:4000/Signup');
     }
 
- 
-  
+    
     render(){
     
         return (
@@ -48,12 +52,12 @@ class Headertop extends Component
                 <span className="fa fa-phone" aria-hidden="true" /> 001 234 5678
               </li>
               <li>
-                <button  data-toggle="modal" data-target="#myModal1"  >
+                <button  data-toggle="modal" data-target="#myModal1" onClick={this.RedirectLogin} >
                   <span className="fa fa-unlock-alt" aria-hidden="true" /> Đăng Nhập </button>
               </li>
               <li>
-                <button  data-toggle="modal" data-target="#myModal2">
-                  <span className="fa fa-pencil-square-o" aria-hidden="true" /> Đăng Ký </button>
+                <button  data-toggle="modal" data-target="#myModal2" onClick={this.RedirectSignup}>
+                  <span className="fa fa-pencil-square-o" aria-hidden="true"  /> Đăng Ký </button>
               </li>
             </ul>
    
