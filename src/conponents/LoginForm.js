@@ -8,7 +8,7 @@ class LoginForm extends Component
         this.state={
         Gmail:"",
         Password:"",
-        Islogin: false
+      
         }
     }
     OnChange = e=>{
@@ -19,7 +19,7 @@ class LoginForm extends Component
           [name]: value
         });
       }
-
+ 
       onSave = e=>{
         e.preventDefault();
         var {Gmail, Password} = this.state;
@@ -28,27 +28,15 @@ class LoginForm extends Component
         user.set('Password',Password);
         axios.post("https://localhost:44348/api/User/Login", user)
         .then(res=>{
-           console.log(res.data);
-           localStorage.setItem("User", JSON.stringify(res.data.gmail));
-          // this.setState({
-          //   Gmail: res.data.gmail,
-          //   Password: res.data.Password,
-          //   Islogin: true
-          // }, ()=>this.IsLogin_(this.state.Islogin, this.state.Gmail, this.state.Password));
         })
         .catch(err=> {
             console.log(err);
         });
       }
 
-    IsLogin_ =  (Islogin, Gmail, Password) =>
-    {
-      //  setTimeout(()=>  this.props._IsLogin(Islogin, Gmail, Password), 1000)
-      this.props._IsLogin(Islogin, Gmail, Password);
-    }
     render(){
-        var {Gmail, Password, Islogin} = this.state;
-        var {closeform} = this.props;
+        var {Gmail, Password} = this.state;
+       
         return (
             <div className="modal fade" id="myModal1" tabIndex={-1} role="dialog">
               <div className="modal-dialog">
@@ -62,7 +50,7 @@ class LoginForm extends Component
                       <span className="fa fa-envelope-o" aria-hidden="true" />
                     </div>
                     <div className="modal_body_left modal_body_left1">
-                      <h3 className="agileinfo_sign">Đăng Nhậpss </h3>
+                      <h3 className="agileinfo_sign">Đăng Nhập </h3>
                       <p>
                         Chưa có tài khoản?
                         <a href="#" data-toggle="modal" data-target="#myModal2">

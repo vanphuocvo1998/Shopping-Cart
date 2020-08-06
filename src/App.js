@@ -17,20 +17,12 @@ class App extends Component {
       this.state={
         Gmail:"",
         Password:"",
-        IsLogin: false,
-        closeform:false,
+      
       }
     }
 
   IsLogin = (IsLogin, Gmail, Password)=>{
-  //  console.log(IsLogin);
-  //  console.log(Gmail);
-  //   console.log(Password);
-    // this.setState({
-    //   Gmail: Gmail,
-    //   Password:Password,
-    //   IsLogin: IsLogin
-    // });
+  
   }
 
   closeform = (value)=>{
@@ -60,12 +52,12 @@ class App extends Component {
                 <div className="header-most-top">
                   <p>Grocery Offer Zone Top Deals &amp; Discounts</p>
                 </div>
-                <Headertop User={this.state.Gmail} closeform={this.closeform} />
+                <Headertop />
           {/* show city */}
             {/* //shop locator (popup) */}
             {/* signin Model */}
             {/* Modal1 */}
-            <LoginForm _IsLogin={this.IsLogin} closeform={closeform}/>
+            <LoginForm />
             <SignupForm />
             <Menu />
             
