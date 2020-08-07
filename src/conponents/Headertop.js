@@ -11,18 +11,84 @@ class Headertop extends Component
         user:""
       }
     }
-    
+    componentDidMount()
+    {
+      console.log(this.props.Gmail);
+      this.setState({
+        user: this.props.Gmail
+      });
+    }
     RedirectLogin=()=>{
     // window.location.replace('http://localhost:4000/Login');
-    this.props.OpenLogin(true);
+    this.props.OpenLogin(1);
     }
     RedirectSignup=()=>{
-      window.location.replace('http://localhost:4000/Signup');
+      //window.location.replace('http://localhost:4000/Signup');
+      this.props.OpenLogin(2);
     }
-
-    
+    Logout =()=>{
+      this.setState({
+        user:"",
+      });
+      this.props.OpenLogin(0);
+    }
+    ShowInfo = user=>{
+     
+      if(user!="" || user)
+      {
+        return (
+          <ul>
+          <li>
+            <a className="play-icon popup-with-zoom-anim" >
+              <span className="fa fa-map-marker" aria-hidden="true" /> Shop Locator</a>
+          </li>
+          <li>
+            <a  data-toggle="modal" data-target="#myModal1">
+              <span className="fa fa-truck" aria-hidden="true" />Track Order</a>
+          </li>
+          <li>
+            <span className="fa fa-phone" aria-hidden="true" /> 001 234 5678
+          </li>
+          <li>
+              <span className="fa fa-unlock-alt" aria-hidden="true" > {user} </span>
+          </li>
+          <li>
+            <button  data-toggle="modal" data-target="#myModal2" onClick={this.Logout}>
+              <span className="fa fa-pencil-square-o" aria-hidden="true"  /> Đăng Xuất </button>
+          </li>
+        </ul>
+        );
+      }
+      else
+      {
+        return (
+          <ul>
+          <li>
+            <a className="play-icon popup-with-zoom-anim" >
+              <span className="fa fa-map-marker" aria-hidden="true" /> Shop Locator</a>
+          </li>
+          <li>
+            <a  data-toggle="modal" data-target="#myModal1">
+              <span className="fa fa-truck" aria-hidden="true" />Track Order</a>
+          </li>
+          <li>
+            <span className="fa fa-phone" aria-hidden="true" /> 001 234 5678
+          </li>
+          <li>
+            <button  data-toggle="modal" data-target="#myModal1" onClick={this.RedirectLogin} >
+              <span className="fa fa-unlock-alt" aria-hidden="true" /> Đăng Nhập </button>
+          </li>
+          <li>
+            <button  data-toggle="modal" data-target="#myModal2" onClick={this.RedirectSignup}>
+              <span className="fa fa-pencil-square-o" aria-hidden="true"  /> Đăng Ký </button>
+          </li>
+        </ul>
+        );
+      }
+    }
     render(){
-    
+      var {user}=this.state;
+      var nameUser =user? user.slice(0,user.length-10):"";
         return (
           <div className="header-bot">
                 <div className="header-bot_inner_wthreeinfo_header_mid">
@@ -30,8 +96,8 @@ class Headertop extends Component
                   <div className="col-md-4 logo_agile">
                     <h1>
                       <a href="index.html">
-                        <span>G</span>rocery
-                        <span>S</span>hoppy
+                        <span>P</span>huocVo
+                        <span>S</span>hop
                         <img src="images/logo2.png" alt=" " />
                       </a>
                     </h1>
@@ -39,28 +105,8 @@ class Headertop extends Component
               {/* header-bot */}
               <div className="col-md-8 header">
                 {/* header lists */}
-                <ul>
-              <li>
-                <a className="play-icon popup-with-zoom-anim" >
-                  <span className="fa fa-map-marker" aria-hidden="true" /> Shop Locator</a>
-              </li>
-              <li>
-                <a  data-toggle="modal" data-target="#myModal1">
-                  <span className="fa fa-truck" aria-hidden="true" />Track Order</a>
-              </li>
-              <li>
-                <span className="fa fa-phone" aria-hidden="true" /> 001 234 5678
-              </li>
-              <li>
-                <button  data-toggle="modal" data-target="#myModal1" onClick={this.RedirectLogin} >
-                  <span className="fa fa-unlock-alt" aria-hidden="true" /> Đăng Nhập </button>
-              </li>
-              <li>
-                <button  data-toggle="modal" data-target="#myModal2" onClick={this.RedirectSignup}>
-                  <span className="fa fa-pencil-square-o" aria-hidden="true"  /> Đăng Ký </button>
-              </li>
-            </ul>
-   
+               
+              {this.ShowInfo(nameUser)}
                 <div className="agileits_search">
                   <form action="#" method="post">
                     <input name="Search" type="search" placeholder="Bạn cần tìm gì?" />

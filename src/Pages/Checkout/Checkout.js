@@ -116,7 +116,7 @@ class Checkout extends Component{
               bill.set('Gmail',res.data.gmail);
               bill.set('Phone',res.data.phone);
               bill.set('Deliverytime',"Sau 3 ngày kể từ ngày đặt!");
-              bill.set('Deliverytime',res.data.address);
+              bill.set('Deliveryplace',res.data.address);
               
               axios.post("https://localhost:44348/api/Bills/AddBill", bill).then(res=>{
                  // console.log(res.data);
